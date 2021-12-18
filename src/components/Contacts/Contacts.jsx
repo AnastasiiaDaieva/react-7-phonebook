@@ -8,18 +8,19 @@ import { deleteContact } from 'store/operations';
 import { getVisibleContacts } from 'store/selectors';
 
 function Contacts({ contacts, onDeleteContact }) {
+  console.log(contacts);
   return (
     <Section className={s.Contacts} text="Contacts">
       <ul className={s.Contacts__list}>
         {contacts.length === 0 ? (
           <h3 className={s.Contacts__message}>Nothing is here</h3>
         ) : (
-          contacts.map(({ name, id, number }) => (
+          contacts.map(({ name, id, phone }) => (
             <ContactsItem
               deleteFunc={() => onDeleteContact(id)}
               name={name}
               key={id}
-              number={number}
+              number={phone}
             />
           ))
         )}
