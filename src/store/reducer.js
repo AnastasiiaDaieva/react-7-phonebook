@@ -1,10 +1,22 @@
 import { combineReducers } from 'redux';
 import { createReducer } from '@reduxjs/toolkit';
-import { addContact, deleteContact, changeFilter } from './actions';
+import {
+  addContactRequest,
+  addContactSuccess,
+  addContactError,
+  deleteContactRequest,
+  deleteContactSuccess,
+  deleteContactError,
+  changeFilter,
+  fetchContactsRequest,
+  fetchContactsSuccess,
+  fetchContactsError,
+} from './actions';
 
 const items = createReducer([], {
-  [addContact]: (state, { payload }) => [...state, payload],
-  [deleteContact]: (state, { payload }) =>
+  [fetchContactsSuccess]: (_, { payload }) => payload,
+  [addContactSuccess]: (state, { payload }) => [...state, payload],
+  [deleteContactSuccess]: (state, { payload }) =>
     state.filter(({ id }) => id !== payload),
 });
 
@@ -12,31 +24,18 @@ const filter = createReducer('', {
   [changeFilter]: (_, { payload }) => payload,
 });
 
-export default combineReducers({ items, filter });
+const loading = createReducer(false, {
+  [addContactRequest]: () => true,
+  [addContactSuccess]: () => false,
+  [addContactError]: () => false,
+  [deleteContactRequest]: () => true,
+  [deleteContactSuccess]: () => false,
+  [deleteContactError]: () => false,
+  [fetchContactsRequest]: () => true,
+  [fetchContactsSuccess]: () => false,
+  [fetchContactsError]: () => false,
+});
 
-// -----------
-// PLAIN REDUX
-// -----------
+const error = createReducer(null, {});
 
-// import { ADD, DELETE, CHANGE_FILTER } from './plain-redux-types';
-// import { combineReducers } from 'redux';
-
-// const items = (state = [], { type, payload }) => {
-//   switch (type) {
-//     case ADD:
-//       return [...state, payload];
-//     case DELETE:
-//       return state.filter(contact => contact.id !== payload);
-//     default:
-//       return state;
-//   }
-// };
-
-// const filter = (state = '', { type, payload }) => {
-//   switch (type) {
-//     case [changeFilter.type]:
-//       return payload;
-//     default:
-//       return state;
-//   }
-// };
+export default combineReducers({ items, filter, loading, error });

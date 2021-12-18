@@ -4,7 +4,7 @@ import { ContactsItem } from './ContactsItem';
 import s from 'components/Contacts/Contacts.module.css';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { deleteContact } from '../../store/actions';
+import { deleteContact } from 'store/operations';
 
 function Contacts({ contacts, onDeleteContact }) {
   return (

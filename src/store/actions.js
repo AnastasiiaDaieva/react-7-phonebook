@@ -1,35 +1,23 @@
-import { nanoid } from 'nanoid';
 import { createAction } from '@reduxjs/toolkit';
 
-export const addContact = createAction('contacts/add', ({ name, number }) => ({
-  payload: {
-    id: nanoid(),
-    name,
-    number,
-  },
-}));
+export const fetchContactsRequest = createAction(
+  'contacts/fetchContactsRequest',
+);
+export const fetchContactsSuccess = createAction(
+  'contacts/fetchContactsSuccess',
+);
+export const fetchContactsError = createAction('contacts/fetchContactsError');
 
-export const deleteContact = createAction('contacts/delete');
+export const addContactRequest = createAction('contacts/addContactRequest');
+export const addContactSuccess = createAction('contacts/addContactSuccess');
+export const addContactError = createAction('contacts/addContactError');
+
+export const deleteContactRequest = createAction(
+  'contacts/deleteContactRequest',
+);
+export const deleteContactSuccess = createAction(
+  'contacts/deleteContactSuccess',
+);
+export const deleteContactError = createAction('contacts/deleteContactError');
 
 export const changeFilter = createAction('contacts/changeFilter');
-
-// -----------
-// PLAIN REDUX
-// -----------
-// import { ADD, DELETE, CHANGE_FILTER } from './plain-redux-types';
-// import { nanoid } from 'nanoid';
-
-// export const addContact = ({ name, number }) => ({
-//   type: ADD,
-//   payload: {
-//     id: nanoid(),
-//     name,
-//     number,
-//   },
-// });
-
-// export const deleteContact = contactId => ({
-//   type: DELETE,
-//   payload: contactId,
-// });
-// export const changeFilter = value => ({ type: CHANGE_FILTER, payload: value });
