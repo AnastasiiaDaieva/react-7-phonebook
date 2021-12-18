@@ -28,17 +28,6 @@ export const fetchContacts = () => async dispatch => {
   }
 };
 
-// not async version
-
-// export const fetchContacts = () => dispatch => {
-//   dispatch(fetchContactsRequest);
-
-//   axios
-//     .get('/contacts')
-//     .then(({ data }) => dispatch(fetchContactsSuccess(data)))
-//     .catch(error => dispatch(fetchContactsError(error)));
-// };
-
 export const addContact =
   ({ name, number }) =>
   dispatch => {

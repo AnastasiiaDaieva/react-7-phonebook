@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { changeFilter } from 'store/actions';
+import { getFilter } from 'store/selectors';
 
 function Filter({ value, onChange }) {
   return (
@@ -17,7 +18,7 @@ Filter.propTypes = {
   onChange: PropTypes.func,
 };
 
-const mapStateToProps = state => ({ value: state.contacts.filter });
+const mapStateToProps = state => ({ value: getFilter(state) });
 
 const mapDispatchToProps = dispatch => ({
   onChange: e => dispatch(changeFilter(e.target.value)),

@@ -6,6 +6,7 @@ import Contacts from 'components/Contacts/Contacts';
 import { fetchContacts } from 'store/operations';
 import { connect, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
+import { isLoading } from 'store/selectors';
 
 function App() {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ function App() {
   );
 }
 const mapStateToProps = state => ({
-  isLoading: state.contacts.loading,
+  isLoading: isLoading(state),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -5,6 +5,7 @@ import s from 'components/Contacts/Contacts.module.css';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { deleteContact } from 'store/operations';
+import { getVisibleContacts } from 'store/selectors';
 
 function Contacts({ contacts, onDeleteContact }) {
   return (
@@ -35,16 +36,8 @@ Contacts.propTypes = {
   number: PropTypes.string,
 };
 
-const getVisibleContacts = (allContacts, filter) => {
-  const normalizedFilter = filter.toLowerCase();
-
-  return allContacts.filter(({ name }) =>
-    name.toLowerCase().includes(normalizedFilter),
-  );
-};
-
-const mapStateToProps = ({ contacts: { items, filter } }) => ({
-  contacts: getVisibleContacts(items, filter),
+const mapStateToProps = state => ({
+  contacts: getVisibleContacts(state),
 });
 
 const mapDispatchToProps = dispatch => ({
