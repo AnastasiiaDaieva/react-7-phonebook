@@ -6,32 +6,41 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { deleteContact } from 'store/operations';
 import { getVisibleContacts } from 'store/selectors';
+import ClipLoader from 'react-spinners/ClipLoader';
+import { useFetchContactsQuery, useDeleteContactMutation } from 'store/slice';
 
-function Contacts({ contacts, onDeleteContact }) {
-  console.log(contacts);
+function Contacts() {
+  const { data, isFetching } = useFetchContactsQuery();
+  const [deleteContact, { isLoading: isDeleting }] = useDeleteContactMutation();
+
+  console.log(data);
   return (
     <Section className={s.Contacts} text="Contacts">
-      <ul className={s.Contacts__list}>
-        {contacts.length === 0 ? (
-          <h3 className={s.Contacts__message}>Nothing is here</h3>
-        ) : (
-          contacts.map(({ name, id, phone }) => (
-            <ContactsItem
-              deleteFunc={() => onDeleteContact(id)}
-              name={name}
-              key={id}
-              number={phone}
-            />
-          ))
-        )}
-      </ul>
+      {isFetching && <ClipLoader color="#000000" size={150} />}
+      {data && (
+        <ul className={s.Contacts__list}>
+          {data.length === 0 ? (
+            <h3 className={s.Contacts__message}>Nothing is here</h3>
+          ) : (
+            data.map(({ name, id, phone }) => (
+              <ContactsItem
+                name={name}
+                key={id}
+                id={id}
+                number={phone}
+                deleting={isDeleting}
+                onDelete={deleteContact}
+              />
+            ))
+          )}
+        </ul>
+      )}
     </Section>
   );
 }
 
 Contacts.propTypes = {
   contacts: PropTypes.array.isRequired,
-  onDeleteContact: PropTypes.func.isRequired,
   name: PropTypes.string,
   id: PropTypes.string,
   number: PropTypes.string,

@@ -1,44 +1,35 @@
-import React, { useState } from 'react';
 import { Section } from 'components/Section/Section';
 import s from 'components/Form/Form.module.css';
 import PropTypes from 'prop-types';
-import { connect, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import { addContact } from 'store/operations';
-function Form({ onSubmit }) {
-  const contacts = useSelector(state => state.contacts.items);
-  console.log(contacts);
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+import { useAddContactMutation, useFetchContactsQuery } from 'store/slice';
+import ClipLoader from 'react-spinners/ClipLoader';
 
-  const findMap = contacts.find(contact => contact.name === name);
+function Form() {
+  const { data } = useFetchContactsQuery();
+  console.log(data);
 
-  const handleSubmit = e => {
-    if (findMap) {
-      alert(`${name} is already in contacts!`);
-      return;
-    } else {
-      e.preventDefault();
-      onSubmit({ name, number });
-      reset();
+  const [addContact, { isLoading }] = useAddContactMutation();
+
+  // const findMap = data.find(contact => contact.name === name);
+
+  const handleSubmit = async e => {
+    // if (findMap) {
+    //   alert(`${name} is already in contacts!`);
+    //   return;
+    // } else {
+    e.preventDefault();
+    const name = e.currentTarget.elements.name.value;
+    const phone = e.currentTarget.elements.number.value;
+    e.currentTarget.reset();
+    try {
+      await addContact({ name, phone });
+      console.log('success');
+    } catch (error) {
+      console.log(error.message);
     }
-  };
-  const handleChange = e => {
-    const { name, value } = e.target;
-    switch (name) {
-      case 'name':
-        setName(value);
-        break;
-      case 'number':
-        setNumber(value);
-        break;
-      default:
-        return;
-    }
-  };
-
-  const reset = () => {
-    setName('');
-    setNumber('');
+    // }
   };
 
   return (
@@ -50,8 +41,6 @@ function Form({ onSubmit }) {
         <input
           className={s.Form__input}
           id="input-name"
-          value={name}
-          onChange={handleChange}
           type="text"
           name="name"
           pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
@@ -62,19 +51,17 @@ function Form({ onSubmit }) {
           Phone number
         </label>
         <input
-          onChange={handleChange}
           className={s.Form__input}
           id="input-tel"
           type="tel"
           name="number"
-          value={number}
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
           required
         />
 
-        <button type="submit" className={s.Form__button}>
-          Add contact
+        <button type="submit" disabled={isLoading} className={s.Form__button}>
+          Add contact{isLoading && <ClipLoader color="#000000" size={12} />}
         </button>
       </form>
     </Section>
