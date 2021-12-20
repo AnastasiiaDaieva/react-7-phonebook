@@ -1,35 +1,35 @@
 import { Section } from 'components/Section/Section';
 import s from 'components/Form/Form.module.css';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { addContact } from 'store/operations';
 import { useAddContactMutation, useFetchContactsQuery } from 'store/slice';
 import ClipLoader from 'react-spinners/ClipLoader';
 
 function Form() {
   const { data } = useFetchContactsQuery();
-  console.log(data);
 
   const [addContact, { isLoading }] = useAddContactMutation();
 
-  // const findMap = data.find(contact => contact.name === name);
+  const findMap = name => {
+    return data.find(
+      contact => contact.name.toLowerCase() === name.toLowerCase(),
+    );
+  };
 
   const handleSubmit = async e => {
-    // if (findMap) {
-    //   alert(`${name} is already in contacts!`);
-    //   return;
-    // } else {
     e.preventDefault();
     const name = e.currentTarget.elements.name.value;
     const phone = e.currentTarget.elements.number.value;
-    e.currentTarget.reset();
-    try {
-      await addContact({ name, phone });
-      console.log('success');
-    } catch (error) {
-      console.log(error.message);
+    if (findMap(name)) {
+      alert(`${name} is already in contacts!`);
+      return;
+    } else {
+      e.currentTarget.reset();
+      try {
+        await addContact({ name, phone });
+      } catch (error) {
+        console.log(error.message);
+      }
     }
-    // }
   };
 
   return (
@@ -75,8 +75,4 @@ Form.propTypes = {
   onChange: PropTypes.func,
 };
 
-const mapDispatchToProps = dispatch => ({
-  onSubmit: ({ name, number }) => dispatch(addContact({ name, number })),
-});
-
-export default connect(null, mapDispatchToProps)(Form);
+export default Form;

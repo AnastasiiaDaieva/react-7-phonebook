@@ -1,23 +1,24 @@
 import React from 'react';
 import s from 'components/Contacts/ContactsItem.module.css';
 import PropTypes from 'prop-types';
+import { useDeleteContactMutation } from 'store/slice';
 
-function ContactsItem({ id, name, number, onDelete, deleting }) {
+function ContactsItem({ id, item }) {
+  const [deleteContact, { isLoading: isDeleting }] = useDeleteContactMutation();
+  const { name, phone } = item;
   return (
-    <>
-      <li key={id} id={id} className={s.ContactsItem}>
-        <span className={s.ContactsItem__text}>
-          {name}: {number}
-        </span>
-      </li>
+    <li key={id} id={id} className={s.ContactsItem}>
+      <span className={s.ContactsItem__text}>
+        {name}: {phone}
+      </span>
       <button
-        type="button"
         className={s.ContactsItem__button}
-        onClick={() => onDelete(id)}
+        onClick={() => deleteContact(id)}
+        disabled={isDeleting}
       >
-        {deleting ? 'Deleting...' : 'Delete'}
+        {isDeleting ? 'Deleting...' : 'Delete'}
       </button>
-    </>
+    </li>
   );
 }
 
